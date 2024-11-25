@@ -1,4 +1,4 @@
-﻿// <copyright file="MessagesController.cs" company="WavePoint Co. Ltd.">
+﻿// <copyright file="OTPController.cs" company="WavePoint Co. Ltd.">
 // Licensed under the MIT license. See LICENSE file in the samples root for full license information.
 // </copyright>
 
@@ -7,43 +7,45 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineSales.Plugin.Sms.Data;
 using OnlineSales.Plugin.Sms.DTOs;
-using OnlineSales.Plugin.Sms.Entities;
 using Serilog;
 
 namespace OnlineSales.Plugin.Sms.Controllers;
 
-[Route("api/messages")]
-public class MessagesController : MessagesControllerBase
+[Route("api/otp")]
+public class OtpController : MessagesControllerBase
 {
-    private readonly ISmsService smsService;
+    private readonly IOtpService otpService;
 
-    public MessagesController(SmsDbContext dbContext, ISmsService smsService)
+    private string language = string.Empty;
+
+    public OtpController(SmsDbContext dbContext, IOtpService otpService)
         : base(dbContext)
     {
-        this.smsService = smsService;
+        this.otpService = otpService;
     }
 
     [HttpPost]
-    [Route("sms")]
+    [Route("otp")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> SendSms(
-        [FromBody] SmsDetailsDto smsDetails,
+    public async Task<ActionResult> SendOtp(
+        [FromBody] OtpDetailsDto otpDetails,
         [FromHeader(Name = "Authentication")] string accessToken)
     {
-        return await SendMessage(accessToken, smsDetails.Recipient, smsDetails.Message);
+        language = otpDetails.Language;
+        return await SendMessage(accessToken, otpDetails.Recipient, otpDetails.OtpCode);
     }
 
     protected override string GetSender(string recipient)
     {
-        return smsService.GetSender(recipient);
+        return otpService.GetSender();
     }
 
     protected override async Task SendMessage(string recipient, string message)
     {
-        await smsService.SendAsync(recipient, message);
+        await otpService.SendOtpAsync(recipient, language, message);
     }
 }
