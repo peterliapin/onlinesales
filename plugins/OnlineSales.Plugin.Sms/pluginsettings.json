@@ -33,6 +33,13 @@
     "Twilio": {
       "AccountSid": "$SMSGATEWAYS__TWILIO__ACCOUNTSID",
       "AuthToken": "$SMSGATEWAYS__TWILIO__AUTHTOKEN"
+    },
+    "WhatsApp": {
+      "ApiUrl": "https://graph.facebook.com",
+      "ApiVersion": "21.0",
+      "AuthToken": "$SMSGATEWAYS__WHATSAPP__AUTHTOKEN",
+      "BusinessPhoneId": "$SMSGATEWAYS__WHATSAPP__BUSINESSPHONEID",
+      "EnableLinkPreviewByDefault": true
     }
   },
   "SmsCountryGateways": [
@@ -57,6 +64,24 @@
       "Gateway": "Smsc"
     }
   ],
+  "OtpGateways": {
+    "Telegram": {
+      "ApiUrl": "https://gatewayapi.telegram.org/",
+      "AuthToken": "$SMSGATEWAYS__TELEGRAM__AUTHTOKEN"
+    },
+    "WhatsApp": {
+      "Default": {
+        "TemplateName": "$WHATSAPP__DEFAULT__TEMPLATENAME",
+        "LanguageCode": "en-US"
+      },
+      "Language": {
+        "en": {
+          "TemplateName": "$WHATSAPP__LANGUAGE__EN__TEMPLATENAME",
+          "LanguageCode": "en-US"
+        }
+      }
+    }
+  },
   "Tasks": [
     {
       "SyncSmsLogTask": {

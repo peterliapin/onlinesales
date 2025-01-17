@@ -88,6 +88,9 @@ public class SmsService : ISmsService
                 case "Twilio":
                     gatewayService = new TwilioService(pluginSettings.SmsGateways.Twilio);
                     break;
+                case "WhatsApp":
+                    gatewayService = new WhatsAppService(pluginSettings.SmsGateways.WhatsApp);
+                    break;
             }
 
             if (gatewayService != null)
